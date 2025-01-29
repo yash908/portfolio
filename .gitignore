@@ -1,5 +1,7 @@
 # Ignore .env file to prevent it from being tracked in the repository
 .env
+tools.env
+
 
 # Ignore other common files/folders that should not be versioned
 /target/
