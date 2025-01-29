@@ -1,0 +1,13 @@
+# Ignore .env file to prevent it from being tracked in the repository
+.env
+
+# Ignore other common files/folders that should not be versioned
+/target/
+*.log
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+.idea/
+.DS_Store
