@@ -44,14 +44,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Spring Boot Starter Thymeleaf -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-
     </dependencies>
     
-
     <build>
         <plugins>
             <!-- Spring Boot Maven Plugin -->
@@ -61,5 +60,8 @@
             </plugin>
         </plugins>
     </build>
-    
+
 </project>
+
+
+
