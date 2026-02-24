@@ -27,7 +27,7 @@ export default function MouseGlow() {
         w-[420px] h-[420px]
         -translate-x-1/2 -translate-y-1/2
         rounded-full blur-[120px]
-        ${isDark ? "bg-cyan-500/25" : "bg-amber-300/40"}`}
+        ${isDark ? "bg-blue-500/25" : "bg-emerald-300/40"}`}
     />
   );
 }

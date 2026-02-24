@@ -1,8 +1,13 @@
 import Hero from "@/components/Hero/Hero";
 import CurrentRole from "@/components/Sections/CurrentRole";
+import About from "@/components/Sections/About";
+import Skills from "@/components/Sections/Skills";
+import Projects from "@/components/Sections/Projects";
+import Contact from "@/components/Sections/Contact";
+import Subscribe from "@/components/Sections/Subscribe";
+
 import ThemeToggle from "@/components/UI/ThemeToggle";
 import MouseGlow from "@/components/UI/MouseGlow";
-import Starfield from "@/components/Effects/Starfield";
 import SectionDots from "@/components/UI/SectionDots";
 
 export default function Home() {
@@ -10,11 +15,15 @@ export default function Home() {
     <>
       <ThemeToggle />
       <MouseGlow />
-      <Starfield />
       <SectionDots />
 
       <Hero />
       <CurrentRole />
+      <About />
+      <Skills />
+      <Projects />
+      <Contact />
+      <Subscribe />
     </>
   );
 }
