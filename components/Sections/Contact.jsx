@@ -1,85 +1,81 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useTheme } from "@/app/providers/ThemeProvider";
 import { Mail, Github, Linkedin } from "lucide-react";
+import SplitText from "@/components/motion/SplitText";
+import { staggerContainer, fadeUp, VIEWPORT } from "@/lib/motion";
 
 const socialLinks = [
-  { Icon: Github, href: "https://github.com/yash908" },
-  { Icon: Linkedin, href: "https://www.linkedin.com/in/yash-sarda-974318197/" }
+  { Icon: Github, href: "https://github.com/yash908", label: "GitHub" },
+  {
+    Icon: Linkedin,
+    href: "https://www.linkedin.com/in/yash-sarda-974318197/",
+    label: "LinkedIn",
+  },
 ];
 
 export default function Contact() {
-  const { isDark } = useTheme();
-
   return (
-    <section
-      id="contact"
-      className="min-h-screen max-w-4xl mx-auto px-8 flex flex-col justify-center items-center text-center relative"
-    >
+    <section id="contact" className="max-w-6xl mx-auto px-6 py-28">
+      {/* The card frame stays put and its contents arrive in sequence. Fading a
+          whole tall card reads as one flat block; staggering the contents is
+          what makes it feel like a reveal. */}
       <motion.div
-        initial={{ opacity: 0, filter: "blur(20px)", y: 20 }}
-        whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-        viewport={{ once: true, amount: 0.4 }}
-        transition={{ duration: 1.1, ease: "easeOut" }}
-        className="w-full relative z-10"
+        variants={staggerContainer(0.12)}
+        initial="hidden"
+        whileInView="visible"
+        viewport={VIEWPORT}
+        className="surface p-10 md:p-16 text-center"
       >
-        <p className={`uppercase tracking-[0.3em] font-bold text-sm mb-4 ${
-          isDark ? "text-blue-400" : "text-emerald-600"
-        }`}>
-          What's Next?
-        </p>
+        <motion.p variants={fadeUp} className="eyebrow mb-4">
+          What&apos;s next
+        </motion.p>
 
-        <h2 className="text-5xl md:text-7xl font-extrabold mb-8">
-          <span className={isDark ? "text-gradient-blue" : "text-gradient-emerald"}>
-            Get In Touch
-          </span>
-        </h2>
+        <SplitText
+          text="Get in touch"
+          as="h2"
+          className="text-3xl md:text-5xl mb-5"
+          delay={0.15}
+        />
 
-        <p className={`text-lg md:text-xl max-w-2xl mx-auto mb-12 ${
-          isDark ? "text-gray-400" : "text-gray-600"
-        }`}>
-          I'm currently open to new opportunities. Whether you have a question, a project idea, or just want to say hi, I'll try my best to get back to you!
-        </p>
-
-        <a
-          href="mailto:yash19091999@gmail.com"
-          className={`inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:scale-105 ${
-            isDark
-              ? "bg-blue-500 text-black hover:bg-blue-400 hover:shadow-[0_0_20px_rgba(59,130,246,0.5)]"
-              : "bg-emerald-600 text-white hover:bg-emerald-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.5)]"
-          }`}
+        <motion.p
+          variants={fadeUp}
+          className="text-fg-muted max-w-lg mx-auto mb-9 leading-relaxed"
         >
-          <Mail size={24} />
-          Say Hello
-        </a>
+          I&apos;m currently open to new opportunities. Whether you have a question, a
+          project idea, or just want to say hi, I&apos;ll try my best to get back to you.
+        </motion.p>
 
-        {/* Social Links */}
-        <div className="flex justify-center gap-8 mt-20">
-          {socialLinks.map(({ Icon, href }, idx) => (
-            <a
-              key={idx}
+        <motion.a
+          variants={fadeUp}
+          href="mailto:yash19091999@gmail.com"
+          className="btn btn-primary"
+        >
+          <Mail size={16} />
+          Say hello
+        </motion.a>
+
+        {/* No initial/whileInView here — it inherits the parent's variant labels,
+            so it sequences after the button instead of racing it. */}
+        <motion.div
+          variants={staggerContainer(0.1, 0.35)}
+          className="flex justify-center gap-2 mt-12 pt-8 border-t border-line-subtle"
+        >
+          {socialLinks.map(({ Icon, href, label }) => (
+            <motion.a
+              variants={fadeUp}
+              key={label}
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className={`p-3 rounded-full transition-all duration-300 hover:-translate-y-2 ${
-                isDark
-                  ? "bg-gray-800 text-gray-400 hover:text-blue-400 hover:bg-gray-700"
-                  : "bg-gray-200 text-gray-600 hover:text-emerald-600 hover:bg-gray-300"
-              }`}
+              aria-label={label}
+              className="btn btn-ghost !p-2.5 rounded-md"
             >
-              <Icon size={24} />
-            </a>
+              <Icon size={18} />
+            </motion.a>
           ))}
-        </div>
+        </motion.div>
       </motion.div>
-
-      {/* Decorative background glow */}
-      <div
-        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg h-96 rounded-full blur-[100px] opacity-20 pointer-events-none ${
-          isDark ? "bg-blue-600" : "bg-emerald-500"
-        }`}
-      />
     </section>
   );
 }

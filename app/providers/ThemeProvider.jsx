@@ -4,27 +4,35 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 const ThemeContext = createContext();
 
+const STORAGE_KEY = "theme";
+
+/**
+ * Reads the theme that the blocking script in app/layout.tsx already applied to
+ * <html>. Doing it this way — rather than defaulting to dark and correcting in
+ * an effect — means React's first render already agrees with the DOM, so there
+ * is no flash of the wrong theme and no cascading re-render on mount.
+ */
+const getInitialTheme = () => {
+  if (typeof document === "undefined") return true; // SSR default: dark
+  return document.documentElement.classList.contains("dark");
+};
+
 export function ThemeProvider({ children }) {
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(getInitialTheme);
 
   useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    if (saved) setIsDark(saved === "dark");
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("theme", isDark ? "dark" : "light");
+    document.documentElement.classList.toggle("dark", isDark);
+    try {
+      localStorage.setItem(STORAGE_KEY, isDark ? "dark" : "light");
+    } catch {
+      // Safari private mode and similar throw on write. A non-persisted theme
+      // is a acceptable degradation; a crashed page is not.
+    }
   }, [isDark]);
 
   return (
     <ThemeContext.Provider value={{ isDark, setIsDark }}>
-      <div
-        className={`transition-colors duration-700 ${
-          isDark ? "bg-black text-white" : "bg-[#FFF7E6] text-[#1A1A1A]"
-        }`}
-      >
-        {children}
-      </div>
+      {children}
     </ThemeContext.Provider>
   );
 }

@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "@/app/providers/ThemeProvider";
-import { ChevronLeft, ChevronRight, Briefcase, Calendar } from "lucide-react";
+import { ArrowLeft, ArrowRight, MapPin, Calendar } from "lucide-react";
+import Reveal from "@/components/motion/Reveal";
+import SectionHeading from "@/components/motion/SectionHeading";
+import { EASE, DURATION } from "@/lib/motion";
 
 const experiences = [
   {
@@ -16,7 +18,7 @@ const experiences = [
     highlights: [
       "Built responsive, accessible user interfaces using Next.js, React, and Tailwind CSS.",
       "Developed robust REST APIs and backend services using Node.js and Express.",
-      "Integrated third-party services, payment gateways, and managed database schemas in PostgreSQL and MongoDB."
+      "Integrated third-party services, payment gateways, and managed database schemas in PostgreSQL and MongoDB.",
     ],
     tags: ["Next.js", "React", "Node.js", "Express", "PostgreSQL", "Tailwind CSS"],
   },
@@ -30,7 +32,7 @@ const experiences = [
     highlights: [
       "Built interactive dashboards in Apache Superset and Grafana backed by optimized SQL queries.",
       "Automated data validation and reporting workflows, reducing data inconsistencies by 40%.",
-      "Created REST APIs to expose analytics-ready datasets for downstream tools."
+      "Created REST APIs to expose analytics-ready datasets for downstream tools.",
     ],
     tags: ["Python", "SQL", "Apache Superset", "Grafana", "REST APIs"],
   },
@@ -61,10 +63,23 @@ const experiences = [
   },
 ];
 
+const variants = {
+  enter: (dir) => ({ x: dir > 0 ? 48 : -48, opacity: 0 }),
+  center: {
+    x: 0,
+    opacity: 1,
+    transition: { duration: DURATION.base, ease: EASE.out },
+  },
+  exit: (dir) => ({
+    x: dir > 0 ? -48 : 48,
+    opacity: 0,
+    transition: { duration: DURATION.fast, ease: EASE.inOutQuart },
+  }),
+};
+
 export default function CurrentRole() {
-  const { isDark } = useTheme();
   const [current, setCurrent] = useState(0);
-  const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
+  const [direction, setDirection] = useState(1);
 
   const navigate = (dir) => {
     setDirection(dir);
@@ -73,179 +88,105 @@ export default function CurrentRole() {
 
   const exp = experiences[current];
 
-  const variants = {
-    enter: (dir) => ({
-      x: dir > 0 ? 80 : -80,
-      opacity: 0,
-      filter: "blur(6px)",
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      filter: "blur(0px)",
-      transition: { duration: 0.45, ease: "easeOut" },
-    },
-    exit: (dir) => ({
-      x: dir > 0 ? -80 : 80,
-      opacity: 0,
-      filter: "blur(6px)",
-      transition: { duration: 0.3, ease: "easeIn" },
-    }),
-  };
-
   return (
-    <section
-      id="current-role"
-      className={`relative min-h-screen transition-colors duration-700 flex items-center ${
-        isDark ? "bg-black text-white" : "bg-[#FFF7E6] text-[#1A1A1A]"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-8 pr-16 w-full py-24">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-14"
-        >
-          <p className={`uppercase tracking-[0.3em] text-xs font-bold mb-2 ${
-            isDark ? "text-blue-400" : "text-emerald-600"
-          }`}>
-            Career Journey
-          </p>
-          <h2 className="text-4xl md:text-5xl font-bold">
-            <span className={isDark ? "text-gradient-blue" : "text-gradient-emerald"}>
-              Experience
-            </span>
-          </h2>
-          <div className={`h-1 w-16 mt-3 rounded ${isDark ? "bg-blue-500" : "bg-emerald-500"}`} />
-        </motion.div>
+    <section id="current-role" className="max-w-6xl mx-auto px-6 py-28">
+      <SectionHeading eyebrow="Career" title="Experience" />
 
-        {/* Carousel */}
-        <div className="relative overflow-hidden">
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={current}
-              custom={direction}
-              variants={variants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              className={`grid md:grid-cols-5 gap-8 p-8 rounded-3xl ${
-                isDark ? "glass-panel" : "glass-panel-light"
-              }`}
-            >
-              {/* LEFT: Role Info */}
-              <div className="md:col-span-2 flex flex-col gap-6 justify-between">
-                {/* Badge */}
-                <div>
-                  <span className={`inline-flex items-center gap-1.5 text-xs uppercase tracking-widest px-3 py-1 rounded-full border mb-4 ${
-                    isDark
-                      ? "border-blue-400/30 text-blue-400"
-                      : "border-emerald-500/30 text-emerald-700"
-                  }`}>
-                    <Briefcase size={10} />
-                    {exp.type}
-                  </span>
-
-                  <h3 className="text-2xl font-bold mb-2 leading-tight">{exp.role}</h3>
-                  <p className={`text-lg font-medium mb-1 ${isDark ? "text-blue-400" : "text-emerald-600"}`}>
-                    {exp.company}
-                  </p>
-                  <p className={`text-sm flex items-center gap-1.5 ${isDark ? "text-gray-500" : "text-gray-500"}`}>
+      <Reveal className="surface overflow-hidden" delay={0.1}>
+        <AnimatePresence mode="wait" custom={direction}>
+          <motion.div
+            key={current}
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            className="grid md:grid-cols-2 gap-10 md:gap-14 p-7 md:p-10"
+          >
+            {/* LEFT: Role info */}
+            <div className="flex flex-col gap-6 justify-between">
+              <div>
+                <h3 className="text-xl mb-1.5 leading-tight">{exp.role}</h3>
+                <p className="text-sm text-accent-text font-medium mb-3">
+                  {exp.company}
+                </p>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-fg-subtle">
+                  <span className="inline-flex items-center gap-1.5">
                     <Calendar size={12} />
                     {exp.period}
-                  </p>
-                </div>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2">
-                  {exp.tags.map((tag, i) => (
-                    <span
-                      key={i}
-                      className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                        isDark
-                          ? "bg-gray-800 text-blue-300 border border-gray-700"
-                          : "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                      }`}
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <MapPin size={12} />
+                    {exp.type}
+                  </span>
                 </div>
               </div>
 
-              {/* Vertical divider */}
-              <div className={`hidden md:flex justify-center`}>
-                <div className={`w-px h-full ${isDark ? "bg-white/10" : "bg-black/10"}`} />
+              <div className="flex flex-wrap gap-2">
+                {exp.tags.map((tag) => (
+                  <span key={tag} className="chip">
+                    {tag}
+                  </span>
+                ))}
               </div>
+            </div>
 
-              {/* RIGHT: Details */}
-              <div className="md:col-span-2 flex flex-col gap-5 justify-center">
-                <p className={`leading-relaxed ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-                  {exp.description}
-                </p>
-
-                <ul className="space-y-3">
-                  {exp.highlights.map((h, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <span className={`mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                        isDark ? "bg-blue-400" : "bg-emerald-500"
-                      }`} />
-                      <span className={`text-sm ${isDark ? "text-gray-300" : "text-gray-700"}`}>{h}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+            {/* RIGHT: Details */}
+            <div className="flex flex-col gap-5">
+              <p className="text-sm text-fg-muted leading-relaxed">
+                {exp.description}
+              </p>
+              <ul className="space-y-3">
+                {exp.highlights.map((h) => (
+                  <li key={h} className="flex items-start gap-3">
+                    <span className="mt-1.5 w-1 h-1 rounded-full bg-accent flex-shrink-0" />
+                    <span className="text-sm text-fg-muted leading-relaxed">{h}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
+        </AnimatePresence>
 
         {/* Controls */}
-        <div className="flex items-center justify-between mt-8">
-          {/* Dots indicator */}
-          <div className="flex items-center gap-3">
-            {experiences.map((_, i) => (
+        <div className="flex items-center justify-between px-7 md:px-10 py-4 border-t border-line-subtle">
+          <div className="flex items-center gap-2">
+            {experiences.map((item, i) => (
               <button
-                key={i}
-                onClick={() => { setDirection(i > current ? 1 : -1); setCurrent(i); }}
-                className="relative h-2 transition-all duration-300 rounded-full overflow-hidden"
+                key={item.role}
+                aria-label={`Show ${item.role}`}
+                onClick={() => {
+                  setDirection(i > current ? 1 : -1);
+                  setCurrent(i);
+                }}
+                className="h-1.5 rounded-full transition-all duration-700
+                  [transition-timing-function:var(--ease-out)]"
                 style={{
-                  width: i === current ? 28 : 8,
-                  background: i === current
-                    ? (isDark ? "#60a5fa" : "#059669")
-                    : (isDark ? "#374151" : "#d1d5db"),
+                  width: i === current ? 20 : 6,
+                  background: i === current ? "var(--accent)" : "var(--line)",
                 }}
               />
             ))}
           </div>
 
-          {/* Prev / Next */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1">
             <button
               onClick={() => navigate(-1)}
-              className={`p-3 rounded-full transition-all duration-300 ${
-                isDark
-                  ? "bg-gray-800 hover:bg-blue-900/50 text-gray-400 hover:text-blue-300"
-                  : "bg-gray-200 hover:bg-emerald-100 text-gray-600 hover:text-emerald-700"
-              }`}
+              aria-label="Previous"
+              className="btn btn-ghost !p-2 rounded-md"
             >
-              <ChevronLeft size={18} />
+              <ArrowLeft size={16} />
             </button>
             <button
               onClick={() => navigate(1)}
-              className={`p-3 rounded-full transition-all duration-300 ${
-                isDark
-                  ? "bg-gray-800 hover:bg-blue-900/50 text-gray-400 hover:text-blue-300"
-                  : "bg-gray-200 hover:bg-emerald-100 text-gray-600 hover:text-emerald-700"
-              }`}
+              aria-label="Next"
+              className="btn btn-ghost !p-2 rounded-md"
             >
-              <ChevronRight size={18} />
+              <ArrowRight size={16} />
             </button>
           </div>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }

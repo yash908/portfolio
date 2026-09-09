@@ -2,10 +2,8 @@
 
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useEffect } from "react";
-import { useTheme } from "@/app/providers/ThemeProvider";
 
 export default function MouseGlow() {
-  const { isDark } = useTheme();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const smoothX = useSpring(x, { stiffness: 120, damping: 20 });
@@ -18,16 +16,15 @@ export default function MouseGlow() {
     };
     window.addEventListener("mousemove", move);
     return () => window.removeEventListener("mousemove", move);
-  }, []);
+    // MotionValues are stable across renders; listed to satisfy exhaustive-deps.
+  }, [x, y]);
 
   return (
     <motion.div
       style={{ left: smoothX, top: smoothY }}
-      className={`pointer-events-none fixed
-        w-[420px] h-[420px]
-        -translate-x-1/2 -translate-y-1/2
-        rounded-full blur-[120px]
-        ${isDark ? "bg-blue-500/25" : "bg-emerald-300/40"}`}
+      className="pointer-events-none fixed z-0 w-[480px] h-[480px]
+        -translate-x-1/2 -translate-y-1/2 rounded-full blur-[140px]
+        bg-accent/[0.07]"
     />
   );
 }

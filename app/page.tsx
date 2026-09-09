@@ -6,24 +6,31 @@ import Projects from "@/components/Sections/Projects";
 import Contact from "@/components/Sections/Contact";
 import Subscribe from "@/components/Sections/Subscribe";
 
-import ThemeToggle from "@/components/UI/ThemeToggle";
+import SmoothScroll from "@/components/motion/SmoothScroll";
+import GalaxyCurtain from "@/components/Effects/GalaxyCurtain";
 import MouseGlow from "@/components/UI/MouseGlow";
 import SectionDots from "@/components/UI/SectionDots";
+import ScrollProgress from "@/components/UI/ScrollProgress";
 
 export default function Home() {
   return (
-    <>
-      <ThemeToggle />
+    <SmoothScroll>
+      <ScrollProgress />
       <MouseGlow />
       <SectionDots />
 
-      <Hero />
-      <CurrentRole />
-      <About />
-      <Skills />
-      <Projects />
-      <Contact />
-      <Subscribe />
-    </>
+      <main className="relative z-10">
+        <GalaxyCurtain>
+          <Hero />
+        </GalaxyCurtain>
+
+        <CurrentRole />
+        <About />
+        <Skills />
+        <Projects />
+        <Contact />
+        <Subscribe />
+      </main>
+    </SmoothScroll>
   );
 }
